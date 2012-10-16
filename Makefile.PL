@@ -2,13 +2,14 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-  'PL_FILES' => {},
-  'INSTALLDIRS' => 'site',
-  'NAME' => 'File::XDG',
-  'EXE_FILES' => [],
-  'VERSION_FROM' => 'lib/File/XDG.pm',
-  'PREREQ_PM' => {
-                   'Path::Abstract' => 0
-                 }
+    'PL_FILES' => {},
+    'INSTALLDIRS' => 'site',
+    'NAME' => 'File::XDG',
+    'EXE_FILES' => [],
+    'VERSION_FROM' => 'lib/File/XDG.pm',
+    'PREREQ_PM' => {
+        'Path::Class' => 0,
+        'File::HomeDir' => 0,
+    }
 )
 ;
