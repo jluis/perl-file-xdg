@@ -2,7 +2,7 @@ package File::XDG;
 
 use strict;
 use warnings;
-use feature qw(:5.12);
+use feature qw(:5.10);
 
 our $VERSION = 0.02;
 
