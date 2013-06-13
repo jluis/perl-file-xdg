@@ -87,7 +87,7 @@ sub _home {
     my ($type) = @_;
     my $home = $ENV{HOME};
 
-    return _win($type) unless ($^O !~ /win/i);
+    return _win($type) if ($^O eq 'MSWin32');
 
     given ($type) {
         when ('data') {
