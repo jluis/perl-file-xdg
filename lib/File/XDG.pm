@@ -8,7 +8,7 @@ our $VERSION = 0.03;
 
 use Carp qw(croak);
 
-use Path::Class;
+use Path::Class qw(dir);
 use File::HomeDir;
 
 =head1 NAME
