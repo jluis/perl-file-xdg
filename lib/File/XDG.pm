@@ -19,7 +19,7 @@ C<File::XDG> - Basic implementation of the XDG base directory specification
 
  use File::XDG;
  
- my $xdg = File::XDG->new('foo');
+ my $xdg = File::XDG->new(name => 'foo');
 
  # user config
  $xdg->config_home
