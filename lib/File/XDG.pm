@@ -18,8 +18,8 @@ C<File::XDG> - Basic implementation of the XDG base directory specification
 =head1 SYNOPSIS
 
  use File::XDG;
- 
- my $xdg = File::XDG->new('foo');
+
+ my $xdg = File::XDG->new(name => 'foo');
 
  # user config
  $xdg->config_home
@@ -202,7 +202,7 @@ sub config_dirs {
 
 =head1 ACKNOWLEDGEMENTS
 
-This module's Windows support is made possible by C<File::HomeDir>. I would also like to thank C<Path::Class>. 
+This module's Windows support is made possible by C<File::HomeDir>. I would also like to thank C<Path::Class>.
 
 =head1 AUTHOR
 
