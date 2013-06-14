@@ -102,6 +102,20 @@ sub _home {
     }
 }
 
+sub _dirs {
+    my $type = shift;
+
+    given ($type) {
+        when ('data') {
+            return ($ENV{XDG_DATA_DIRS} || '/usr/local/share:/usr/share')
+        } when ('config') {
+            return ($ENV{XDG_CONFIG_DIRS} || '/etc/xdg')
+        } default {
+            croak 'invalid _dirs requested'
+        }
+    }
+}
+
 =head1 METHODS
 
 =cut
@@ -150,8 +164,7 @@ specification, the returned string is :-delimited.
 =cut
 
 sub data_dirs {
-    my $self = shift;
-    return ($ENV{XDG_DATA_DIRS} || '/usr/local/share:/usr/share')
+    return _dirs('data');
 }
 
 =head2 $xdg->config_dirs()
@@ -162,8 +175,8 @@ the specification, the returned string is :-delimited.
 =cut
 
 sub config_dirs {
-    my $self = shift;
-    return ($ENV{XDG_CONFIG_DIRS} || '/etc/xdg')
+    return _dirs('config');
+}
 
 }
 
