@@ -116,6 +116,20 @@ sub _dirs {
     }
 }
 
+sub _lookup_file {
+    my ($self, $type, @subpath) = @_;
+
+    unless (@subpath) {
+        croak 'subpath not specified';
+    }
+
+    my @dirs = (_home($type), split(':', _dirs($type)));
+    my @paths = map { File::Spec->join($_, @subpath) } @dirs;
+    my ($match) = grep { -f $_ } @paths;
+
+    return $match;
+}
+
 =head1 METHODS
 
 =cut
@@ -178,6 +192,32 @@ sub config_dirs {
     return _dirs('config');
 }
 
+=head2 $xdg->lookup_data_file('subdir', 'filename');
+
+Lookups the data file by searching for ./subdir/filename relative to all base
+directories indicated by $XDG_DATA_HOME and $XDG_DATA_DIRS. If an environment
+variable is either not set or empty, its default value as defined by the
+specification is used instead.
+
+=cut
+
+sub lookup_data_file {
+    my ($self, @subpath) = @_;
+    return $self->_lookup_file('data', @subpath);
+}
+
+=head2 $xdg->lookup_config_file('subdir', 'filename');
+
+Lookups the configuration file by searching for ./subdir/filename relative to
+all base directories indicated by $XDG_CONFIG_HOME and $XDG_CONFIG_DIRS. If an
+environment variable is either not set or empty, its default value as defined
+by the specification is used instead.
+
+=cut
+
+sub lookup_config_file {
+    my ($self, @subpath) = @_;
+    return $self->_lookup_file('config', @subpath);
 }
 
 =head1 ACKNOWLEDGEMENTS
