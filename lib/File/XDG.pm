@@ -97,7 +97,7 @@ sub _home {
         } when ('cache') {
             return ($ENV{XDG_CACHE_HOME} || "$home/.cache/")
         } default {
-            croak 'invalid user home requested'
+            croak 'invalid _home requested'
         }
     }
 }
