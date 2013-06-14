@@ -91,11 +91,11 @@ sub _home {
 
     given ($type) {
         when ('data') {
-            return "$home/.local/share/"
+            return ($ENV{XDG_DATA_HOME} || "$home/.local/share/")
         } when ('config') {
-            return "$home/.config/"
+            return ($ENV{XDG_CONFIG_HOME} || "$home/.config/")
         } when ('cache') {
-            return "$home/.cache/"
+            return ($ENV{XDG_CACHE_HOME} || "$home/.cache/")
         } default {
             croak 'invalid user home requested'
         }
@@ -114,15 +114,7 @@ Returns the user-specific data directory for the application.
 
 sub data_home {
     my $self = shift;
-
-    my $xdg;
-
-    if (defined($ENV{XDG_DATA_HOME})) {
-        $xdg = $ENV{XDG_DATA_HOME};
-    } else {
-        $xdg = _home('data');
-    }
-
+    my $xdg = _home('data');
     return dir($xdg, $self->{name});
 }
 
@@ -134,15 +126,7 @@ Returns the user-specific configuration directory for the application.
 
 sub config_home {
     my $self = shift;
-
-    my $xdg;
-
-    if (defined($ENV{XDG_CONFIG_HOME})) {
-        $xdg = $ENV{XDG_CONFIG_HOME};
-    } else {
-        $xdg = _home('config');
-    }
-
+    my $xdg = _home('config');
     return dir($xdg, $self->{name});
 }
 
@@ -154,15 +138,7 @@ Returns the user-specific cache directory for the application.
 
 sub cache_home {
     my $self = shift;
-
-    my $xdg;
-
-    if (defined($ENV{XDG_CACHE_HOME})) {
-        $xdg = $ENV{XDG_CACHE_HOME};
-    } else {
-        $xdg = _home('cache');
-    }
-
+    my $xdg = _home('cache');
     return dir($xdg, $self->{name});
 }
 
@@ -175,12 +151,7 @@ specification, the returned string is :-delimited.
 
 sub data_dirs {
     my $self = shift;
-
-    if (defined($ENV{XDG_DATA_DIRS})) {
-        return $ENV{XDG_DATA_DIRS};
-    } else {
-        return '/usr/local/share:/usr/share'
-    }
+    return ($ENV{XDG_DATA_DIRS} || '/usr/local/share:/usr/share')
 }
 
 =head2 $xdg->config_dirs()
@@ -192,12 +163,8 @@ the specification, the returned string is :-delimited.
 
 sub config_dirs {
     my $self = shift;
+    return ($ENV{XDG_CONFIG_DIRS} || '/etc/xdg')
 
-    if (defined($ENV{XDG_CONFIG_DIRS})) {
-        return $ENV{XDG_CONFIG_DIRS};
-    } else {
-        return '/etc/xdg'
-    }
 }
 
 =head1 ACKNOWLEDGEMENTS
