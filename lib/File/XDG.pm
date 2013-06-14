@@ -91,15 +91,43 @@ sub _home {
 
     given ($type) {
         when ('data') {
-            return "$home/.local/share/"
+            return ($ENV{XDG_DATA_HOME} || "$home/.local/share/")
         } when ('config') {
-            return "$home/.config/"
+            return ($ENV{XDG_CONFIG_HOME} || "$home/.config/")
         } when ('cache') {
-            return "$home/.cache/"
+            return ($ENV{XDG_CACHE_HOME} || "$home/.cache/")
         } default {
-            croak 'invalid user home requested'
+            croak 'invalid _home requested'
         }
     }
+}
+
+sub _dirs {
+    my $type = shift;
+
+    given ($type) {
+        when ('data') {
+            return ($ENV{XDG_DATA_DIRS} || '/usr/local/share:/usr/share')
+        } when ('config') {
+            return ($ENV{XDG_CONFIG_DIRS} || '/etc/xdg')
+        } default {
+            croak 'invalid _dirs requested'
+        }
+    }
+}
+
+sub _lookup_file {
+    my ($self, $type, @subpath) = @_;
+
+    unless (@subpath) {
+        croak 'subpath not specified';
+    }
+
+    my @dirs = (_home($type), split(':', _dirs($type)));
+    my @paths = map { File::Spec->join($_, @subpath) } @dirs;
+    my ($match) = grep { -f $_ } @paths;
+
+    return $match;
 }
 
 =head1 METHODS
@@ -114,15 +142,7 @@ Returns the user-specific data directory for the application.
 
 sub data_home {
     my $self = shift;
-
-    my $xdg;
-
-    if (defined($ENV{XDG_DATA_HOME})) {
-        $xdg = $ENV{XDG_DATA_HOME};
-    } else {
-        $xdg = _home('data');
-    }
-
+    my $xdg = _home('data');
     return dir($xdg, $self->{name});
 }
 
@@ -134,15 +154,7 @@ Returns the user-specific configuration directory for the application.
 
 sub config_home {
     my $self = shift;
-
-    my $xdg;
-
-    if (defined($ENV{XDG_CONFIG_HOME})) {
-        $xdg = $ENV{XDG_CONFIG_HOME};
-    } else {
-        $xdg = _home('config');
-    }
-
+    my $xdg = _home('config');
     return dir($xdg, $self->{name});
 }
 
@@ -154,15 +166,7 @@ Returns the user-specific cache directory for the application.
 
 sub cache_home {
     my $self = shift;
-
-    my $xdg;
-
-    if (defined($ENV{XDG_CACHE_HOME})) {
-        $xdg = $ENV{XDG_CACHE_HOME};
-    } else {
-        $xdg = _home('cache');
-    }
-
+    my $xdg = _home('cache');
     return dir($xdg, $self->{name});
 }
 
@@ -174,13 +178,7 @@ specification, the returned string is :-delimited.
 =cut
 
 sub data_dirs {
-    my $self = shift;
-
-    if (defined($ENV{XDG_DATA_DIRS})) {
-        return $ENV{XDG_DATA_DIRS};
-    } else {
-        return '/usr/local/share:/usr/share'
-    }
+    return _dirs('data');
 }
 
 =head2 $xdg->config_dirs()
@@ -191,13 +189,35 @@ the specification, the returned string is :-delimited.
 =cut
 
 sub config_dirs {
-    my $self = shift;
+    return _dirs('config');
+}
 
-    if (defined($ENV{XDG_CONFIG_DIRS})) {
-        return $ENV{XDG_CONFIG_DIRS};
-    } else {
-        return '/etc/xdg'
-    }
+=head2 $xdg->lookup_data_file('subdir', 'filename');
+
+Lookups the data file by searching for ./subdir/filename relative to all base
+directories indicated by $XDG_DATA_HOME and $XDG_DATA_DIRS. If an environment
+variable is either not set or empty, its default value as defined by the
+specification is used instead.
+
+=cut
+
+sub lookup_data_file {
+    my ($self, @subpath) = @_;
+    return $self->_lookup_file('data', @subpath);
+}
+
+=head2 $xdg->lookup_config_file('subdir', 'filename');
+
+Lookups the configuration file by searching for ./subdir/filename relative to
+all base directories indicated by $XDG_CONFIG_HOME and $XDG_CONFIG_DIRS. If an
+environment variable is either not set or empty, its default value as defined
+by the specification is used instead.
+
+=cut
+
+sub lookup_config_file {
+    my ($self, @subpath) = @_;
+    return $self->_lookup_file('config', @subpath);
 }
 
 =head1 ACKNOWLEDGEMENTS
