@@ -10,6 +10,7 @@ use Carp qw(croak);
 
 use Path::Class qw(dir);
 use File::HomeDir;
+use File::Spec;
 
 =head1 NAME
 
@@ -136,7 +137,7 @@ sub _lookup_file {
 
 =head2 $xdg->data_home()
 
-Returns the user-specific data directory for the application.
+Returns the user-specific data directory for the application as a C<Path::Class> object.
 
 =cut
 
@@ -148,7 +149,7 @@ sub data_home {
 
 =head2 $xdg->config_home()
 
-Returns the user-specific configuration directory for the application.
+Returns the user-specific configuration directory for the application as a C<Path::Class> object.
 
 =cut
 
@@ -160,7 +161,7 @@ sub config_home {
 
 =head2 $xdg->cache_home()
 
-Returns the user-specific cache directory for the application.
+Returns the user-specific cache directory for the application as a C<Path::Class> object.
 
 =cut
 
@@ -194,7 +195,7 @@ sub config_dirs {
 
 =head2 $xdg->lookup_data_file('subdir', 'filename');
 
-Lookups the data file by searching for ./subdir/filename relative to all base
+Looks up the data file by searching for ./subdir/filename relative to all base
 directories indicated by $XDG_DATA_HOME and $XDG_DATA_DIRS. If an environment
 variable is either not set or empty, its default value as defined by the
 specification is used instead.
@@ -208,7 +209,7 @@ sub lookup_data_file {
 
 =head2 $xdg->lookup_config_file('subdir', 'filename');
 
-Lookups the configuration file by searching for ./subdir/filename relative to
+Looks up the configuration file by searching for ./subdir/filename relative to
 all base directories indicated by $XDG_CONFIG_HOME and $XDG_CONFIG_DIRS. If an
 environment variable is either not set or empty, its default value as defined
 by the specification is used instead.
@@ -220,9 +221,13 @@ sub lookup_config_file {
     return $self->_lookup_file('config', @subpath);
 }
 
+=head1 SEE ALSO
+
+L<XDG Base Directory specification, version 0.7|http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html>
+
 =head1 ACKNOWLEDGEMENTS
 
-This module's Windows support is made possible by C<File::HomeDir>. I would also like to thank C<Path::Class>.
+This module's Windows support is made possible by C<File::HomeDir>. I would also like to thank C<Path::Class> and C<File::Spec>.
 
 =head1 AUTHOR
 
