@@ -8,9 +8,8 @@ our $VERSION = 0.03;
 
 use Carp qw(croak);
 
-use Path::Class qw(dir);
+use Path::Class qw(dir file);
 use File::HomeDir;
-use File::Spec;
 
 =head1 NAME
 
@@ -125,7 +124,7 @@ sub _lookup_file {
     }
 
     my @dirs = (_home($type), split(':', _dirs($type)));
-    my @paths = map { File::Spec->join($_, @subpath) } @dirs;
+    my @paths = map { file($_, @subpath) } @dirs;
     my ($match) = grep { -f $_ } @paths;
 
     return $match;
@@ -198,7 +197,7 @@ sub config_dirs {
 Looks up the data file by searching for ./subdir/filename relative to all base
 directories indicated by $XDG_DATA_HOME and $XDG_DATA_DIRS. If an environment
 variable is either not set or empty, its default value as defined by the
-specification is used instead.
+specification is used instead. Returns a C<Path::Class> object.
 
 =cut
 
@@ -212,7 +211,7 @@ sub lookup_data_file {
 Looks up the configuration file by searching for ./subdir/filename relative to
 all base directories indicated by $XDG_CONFIG_HOME and $XDG_CONFIG_DIRS. If an
 environment variable is either not set or empty, its default value as defined
-by the specification is used instead.
+by the specification is used instead. Returns a C<Path::Class> object.
 
 =cut
 
