@@ -89,31 +89,26 @@ sub _home {
 
     return _win($type) if ($^O eq 'MSWin32');
 
-    given ($type) {
-        when ('data') {
-            return ($ENV{XDG_DATA_HOME} || "$home/.local/share/")
-        } when ('config') {
-            return ($ENV{XDG_CONFIG_HOME} || "$home/.config/")
-        } when ('cache') {
-            return ($ENV{XDG_CACHE_HOME} || "$home/.cache/")
-        } default {
-            croak 'invalid _home requested'
-        }
-    }
+    my %locations = (
+        data => ($ENV{XDG_DATA_HOME} || "$home/.local/share/"),
+        cache => ($ENV{XDG_CACHE_HOME} || "$home/.cache/"),
+        config => ($ENV{XDG_CONFIG_HOME} || "$home/.config/"),
+    );
+
+    return $locations{$type} if exists $locations{$type};
+    croak 'invalid _home requested';
 }
 
 sub _dirs {
     my $type = shift;
 
-    given ($type) {
-        when ('data') {
-            return ($ENV{XDG_DATA_DIRS} || '/usr/local/share:/usr/share')
-        } when ('config') {
-            return ($ENV{XDG_CONFIG_DIRS} || '/etc/xdg')
-        } default {
-            croak 'invalid _dirs requested'
-        }
-    }
+    my %locations = (
+        data => ($ENV{XDG_DATA_DIRS} || '/usr/local/share:/usr/share'),
+        config => ($ENV{XDG_CONFIG_DIRS} || '/etc/xdg'),
+    );
+
+    return $locations{$type} if exists $locations{$type};
+    croak 'invalid _dirs requested';
 }
 
 sub _lookup_file {
