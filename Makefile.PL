@@ -3,14 +3,14 @@ require 5.010000;
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-  'NAME' => 'File::XDG',
-  'VERSION_FROM' => 'lib/File/XDG.pm',
-  'PREREQ_PM' => {
-                   'File::HomeDir' => 0,
-                   'Path::Class' => 0
-                 },
   'INSTALLDIRS' => 'site',
   'EXE_FILES' => [],
-  'PL_FILES' => {}
+  'PREREQ_PM' => {
+                   'Path::Class' => 0,
+                   'File::HomeDir' => 0
+                 },
+  'NAME' => 'File::XDG',
+  'PL_FILES' => {},
+  'VERSION_FROM' => 'lib/File/XDG.pm'
 )
 ;
