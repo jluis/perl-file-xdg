@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use feature qw(:5.10);
 
-our $VERSION = 0.04;
+our $VERSION = '0.04_001';
 
 use Carp qw(croak);
 
@@ -87,7 +87,7 @@ sub _home {
     my ($type) = @_;
     my $home = $ENV{HOME};
 
-    return _win($type) if ($^O eq 'MSWin32');
+    $home = _win($type) if ($^O eq 'MSWin32');
 
     my %locations = (
         data => ($ENV{XDG_DATA_HOME} || "$home/.local/share/"),
