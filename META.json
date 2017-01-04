@@ -4,7 +4,7 @@
       "Kiyoshi Aman <kiyoshi.aman@gmail.com>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.421",
+   "generated_by" : "Module::Build version 0.4218",
    "license" : [
       "perl_5"
    ],
@@ -30,9 +30,16 @@
    },
    "release_status" : "testing",
    "resources" : {
+      "bugtracker" : {
+         "web" : "http://github.com/Aerdan/perl-file-xdg/issues"
+      },
       "license" : [
          "http://dev.perl.org/licenses/"
-      ]
+      ],
+      "repository" : {
+         "url" : "git://github.com/Aerdan/perl-file-xdg.git"
+      }
    },
-   "version" : "0.04_001"
+   "version" : "0.04_001",
+   "x_serialization_backend" : "JSON::PP version 2.27400"
 }
